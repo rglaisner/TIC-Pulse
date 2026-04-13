@@ -1,0 +1,22 @@
+---
+alwaysApply: true
+---
+
+## 1. DATA BOUNDARY POLICY (The "Zod Gatekeeper")
+* **No Unvalidated Data:** Every external data source (API response, process.env, local storage) MUST have a corresponding Zod schema.
+* **Schema-First Development:** Define the Zod schema before writing the fetching logic. 
+* **Validation Strategy:** * Use `.safeParse()` for critical paths where you want to handle errors gracefully without crashing.
+    * Use `.parse()` only when a failure should explicitly stop execution (e.g., during app initialization).
+* **Expert Search:** If a Zod implementation is complex (e.g., recursive schemas or transforms), use the `search-zod-v-4-docs` MCP tool to verify the syntax.
+
+## 2. DEFENSIVE ASYNC & ERROR LOGGING
+* **Zod Error Handling:** When validation fails, extract the `error.format()` or `error.flatten()` and log the specific fields that failed.
+* **Structured Debug Logs:** All catch blocks must include:
+    1. A human-readable message.
+    2. The raw data that caused the failure (sanitized).
+    3. The Zod issue array (if applicable).
+* **Logging Interface:** Use a standard logger. Always log as an object: `logger.error({ event: 'API_VALIDATION_FAILED', path, issues: result.error.issues })`.
+
+## 3. TYPESCRIPT CONSTRAINTS
+* **Inference:** Always derive TypeScript types from Zod schemas using `z.infer<typeof schema>` to ensure the code and validation never drift.
+* **Discriminated Unions:** For API responses with multiple states (success/error), use Zod discriminated unions to force exhaustive checking in the UI.
