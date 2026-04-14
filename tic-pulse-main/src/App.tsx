@@ -632,13 +632,50 @@ function DiscoverView() {
 
   useEffect(() => {
     let cancelled = false;
+
+    async function parseJsonSafe(response: Response): Promise<unknown> {
+      try {
+        return await response.json();
+      } catch {
+        return null;
+      }
+    }
+
     async function load() {
       try {
         const res = await fetch("/.netlify/functions/fetch-substack");
-        const data = await res.json();
-        if (!cancelled && data.ok) { setSubstackArticles(dedupe(data.articles || [])); }
-        else if (!cancelled) { setError("Couldn't load TIC content"); }
-      } catch { if (!cancelled) setError("Couldn't connect to TIC feed"); }
+
+        if (!res.ok) {
+          if (!cancelled) {
+            if (res.status === 404) {
+              setError("TIC feed endpoint is missing in this environment");
+            } else {
+              setError(`TIC feed returned an error (HTTP ${res.status})`);
+            }
+          }
+          return;
+        }
+
+        const payload = await parseJsonSafe(res);
+        if (!payload || typeof payload !== "object") {
+          if (!cancelled) setError("TIC feed returned an invalid response");
+          return;
+        }
+
+        const data = payload as { ok?: boolean; articles?: unknown[]; error?: unknown };
+
+        if (!cancelled && data.ok) {
+          setSubstackArticles(dedupe(Array.isArray(data.articles) ? data.articles : []));
+          return;
+        }
+
+        if (!cancelled) {
+          const reason = typeof data.error === "string" ? data.error : "unknown error";
+          setError(`Couldn't load TIC content: ${reason}`);
+        }
+      } catch {
+        if (!cancelled) setError("Couldn't connect to TIC feed");
+      }
       finally { if (!cancelled) setLoading(false); }
     }
     load();
