@@ -646,8 +646,15 @@ function DiscoverView() {
         const res = await fetch("/.netlify/functions/fetch-substack");
 
         if (!res.ok) {
+          const responseText = await res.text();
+          const isLocalFunctionUnavailable =
+            import.meta.env.DEV &&
+            (responseText.includes("ECONNREFUSED") || responseText.includes("http proxy error"));
+
           if (!cancelled) {
-            if (res.status === 404) {
+            if (isLocalFunctionUnavailable) {
+              setError("Local TIC feed function is not running. Start Netlify dev on port 8888.");
+            } else if (res.status === 404) {
               setError("TIC feed endpoint is missing in this environment");
             } else {
               setError(`TIC feed returned an error (HTTP ${res.status})`);
