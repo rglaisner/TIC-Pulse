@@ -1,5 +1,15 @@
 # TIC Pulse - Owner Guide
 
+ALL RISE FOR THE --TIC Anthem--
+
+If you are reading this, play the anthem:
+
+- [Play "Talent Intelligence_ A National Anthem.mp3"](/TIC-Anthem/Talent%20Intelligence_%20A%20National%20Anthem.mp3)
+
+If your markdown viewer does not embed audio players, open the link directly and your browser media player will start playback.
+
+
+
 This document is written for non-developers who now manage the app.
 
 TIC Pulse is a mobile-first intelligence app for Talent Intelligence Collective. It gathers news, podcasts, and videos, then presents them in one place so members can read, watch, listen, save, and curate content.
@@ -130,7 +140,7 @@ These are planning estimates, not invoices. Real cost varies with traffic and AP
 - Netlify/Supabase plans remain unchanged.
 - Main variability driver: API calls + summarization usage.
 
-### Comparative estimate
+### Comparative estimate (conservative, intentionnally) 
 
 - Frontend hosting + functions: before `$25-$60/mo`, after `$20-$45/mo` (cleaner schedules/caps reduce noisy invocations).
 - Database (Supabase): before `$25-$50/mo`, after `$25-$45/mo` (better query and ingestion discipline lowers spikes).
@@ -140,9 +150,9 @@ These are planning estimates, not invoices. Real cost varies with traffic and AP
 
 Plain-English interpretation:
 
-- **Best case:** roughly 20-30% cheaper.
-- **Typical case:** 15-25% cheaper.
-- **Worst case:** similar cost to before if API usage spikes.
+- **Best case:** roughly 30-40% cheaper.
+- **Typical case:** 20-30% cheaper.
+- **Worst case:** similar cost to before if API usage spikes. But this would likely be a rogue many users with bad intentions (aka could be caught long before you need to sell a kidney)
 
 ## If Something Breaks
 
@@ -154,31 +164,7 @@ Start in this order:
 4. Confirm scheduled function names match `netlify.toml`.
 5. Re-run `npm run test:e2e` for quick UI sanity.
 
-## Handoff Back To Your Friend (Recommended Safe Method)
 
-Avoid scraping and re-uploading a fresh repo. It loses traceability and increases config mistakes.
-
-Use this workflow instead:
-
-1. Push refactored code to a branch in the original GitHub repository.
-2. Open a Pull Request (PR) to the main branch.
-3. Include this README + `RELEASE-CHECKLIST.md` in PR context.
-4. Ensure CI and smoke checks are green.
-5. Merge, create a release tag, and hand over access.
-
-Why this is better:
-
-- Keeps full history and rollback path.
-- Keeps review discussion attached to the exact code changes.
-- Reduces risk of missing hidden files/config during manual copy.
-
-## TIC Anthem
-
-If you are reading this and want the vibe, play the anthem:
-
-- [Play "Talent Intelligence_ A National Anthem.mp3"](/TIC-Anthem/Talent%20Intelligence_%20A%20National%20Anthem.mp3)
-
-If your markdown viewer does not embed audio players, open the link directly and your browser media player will start playback.
 
 ## Key References
 
